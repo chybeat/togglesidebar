@@ -142,7 +142,7 @@ El contenedor que contiene los elementos del sidebar requiere los siguientes atr
 | `data-sidebar="sidebar-name"`              | Nombre para el sidebar [^2]                                     |
 | `data-sidebar-container="true"`            | Especifica que es el nodo contenedor del sidebar                |
 | `data-sidebar-activate-class="class-name"` | La clase que se agregará en `body` para activar el menú         |
-| `data-sidebar-autoclose="true"`            | Opcional. Especifica cierre al hacer click fuera del contenedor |
+| `data-sidebar-auto-close="true"`           | Opcional. Especifica cierre al hacer click fuera del contenedor |
 
 #### Ejemplo:
 
@@ -153,7 +153,7 @@ El contenedor que contiene los elementos del sidebar requiere los siguientes atr
 	data-sidebar="mobile-main-menu"
 	data-sidebar-container="true"
 	data-sidebar-activate-class="show-options-menu"
-	data-sidebar-autoclose="false"
+	data-sidebar-auto-close="false"
 >
 ...
 </aside>
@@ -211,7 +211,7 @@ Un sidebar puede cerrarse con 3 acciones máximo, estas son:
 
 Pero depende... :
 
-1. Si desde JS se pasa la propiedad `autoclose: false`, en HTML se coloca el atributo `data-sidebar-autoclose="false" ` o la ausencia total del atributo, no cerrará el sidebar cuando se haga click fuera del contenedor del sidebar. A menos que....
+1. Si desde JS se pasa la propiedad `autoClose: false`, en HTML se coloca el atributo `data-sidebar-auto-close="false" ` o la ausencia total del atributo o propiedad, no cerrará el sidebar cuando se haga click fuera del contenedor del sidebar. A menos que....
 2. Si no se coloca desde JS un nodo de cierre, o en HTML no se especifica el atributo `data-sidebar-action="close"` en algún nodo, se forzará que cierre el sidebar al hacer click fuera del contenedor.
 
 # Algo de CSS
