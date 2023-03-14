@@ -61,7 +61,7 @@ class ToggleSidebar {
 
 		//set the autoclose to true (close when click out container) when no close node was
 		//specified. If autoClose attribute is in function param object it will be used. Default is false
-		let autoclose = !sidebar.closeSidebarNode || sidebar.autoClose || false;
+		let autoClose = !sidebar.closeSidebarNode || sidebar.autoClose || false;
 
 		//verifying container and open nodes exists
 		if (
@@ -77,7 +77,7 @@ class ToggleSidebar {
 			contData.sidebarContainer = "true";
 			contData.sidebar = sidebar.name;
 			contData.sidebarActivateClass = sidebar.activationClass;
-			contData.sidebarAutoclose = autoclose;
+			contData.sidebarAutoClose = autoClose;
 		}
 		if (
 			typeof sidebar.openSidebarNode !== "object" ||
@@ -162,7 +162,7 @@ class ToggleSidebar {
 					}
 				}
 			});
-			let autoClose = node.dataset.sidebarAutoclose == "true" || false;
+			let autoClose = node.dataset.sidebarAutoClose == "true" || false;
 			if (!sidebarInfo.closeSidebarNode) {
 				autoClose = true;
 			}
@@ -184,7 +184,7 @@ class ToggleSidebar {
 
 		if (force) {
 			//removing body listener
-			this.body.removeEventListener("click", this.bodyActionHandler, false);
+			window.removeEventListener("click", this.bodyActionHandler, false);
 			// removing activation class
 			this.body.classList.remove(sidebar.activationClass);
 			// remove saidebar open status
@@ -197,7 +197,7 @@ class ToggleSidebar {
 			);
 		} else {
 			// adding listener to body. This will compare the next user clicked node
-			this.body.addEventListener("click", this.bodyActionHandler, false);
+			window.addEventListener("click", this.bodyActionHandler, false);
 		}
 	}
 
@@ -213,7 +213,7 @@ class ToggleSidebar {
 		}
 		//removing any possible event listener relative to ToggleSidebar in
 		//HTML body tag or sidebars open nodes
-		this.body.removeEventListener("click", this.bodyActionHandler, false);
+		window.removeEventListener("click", this.bodyActionHandler, false);
 		this.sidebarsList.forEach((sidebar) => {
 			sidebar.openSidebarNode.removeEventListener(
 				"click",
@@ -276,6 +276,7 @@ class ToggleSidebar {
 
 		//clicked element
 		const clicked = evt.target;
+		//console.log(clicked);
 		let sidebar;
 
 		//searching the first sidebar with openStatus = true.
@@ -301,7 +302,7 @@ class ToggleSidebar {
 			(sidebar.autoClose && sidebarClicked === null)
 		) {
 			//removing body event listener in body (this helps avoid double listener)
-			this.body.removeEventListener("click", this.bodyActionHandler, false);
+			window.removeEventListener("click", this.bodyActionHandler, false);
 			//forcing sidebar close
 			this.closeActionHandler(sidebar, true);
 		}
