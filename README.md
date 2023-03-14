@@ -1,4 +1,4 @@
-# Toiggle Sidebar Plugin v1.0
+# Toggle Sidebar Plugin v1.1
 
 _Sidebar hace referencia a barras laterales, menús o listados que pueden variar su visualización (aparecer/ocultarse) dependiendo de un click_
 
@@ -20,7 +20,7 @@ Quitar y poner en el atributo `class` de la etiqueta `body` un texto, pero que p
 
 En algunas ocasiones es necesario tener más de un sidebar o que tenga "funcionalidades" más allá de simplemente ocultarce al hacer click en el botón de cierre.
 
-Este plugin realiza las dos cosas, se cierra con hasta 3 acciones distintas y se pueden implementar varios sidebar facilmente que se cierran al abrir cualquier otro sidebar.
+Este plugin realiza las dos cosas, se cierra con hasta 4 acciones distintas y se pueden implementar varios sidebar facilmente que se cierran al abrir cualquier otro sidebar.
 
 Adicionalmente, me sirvió para apder un poco sobre clases de Javascript, como implementar 'event listeners' desde una clase de Javascipt y como manejarlos.
 
@@ -201,13 +201,14 @@ Este es el elemento que cerrará el sidebar, si no se pasa ningun elemento o alg
 </i>
 ```
 
-### ¿Y... qué hay de esas 3 acciones cierre?
+### ¿Y... qué hay de esas 4 acciones cierre?
 
-Un sidebar puede cerrarse con 3 acciones máximo, estas son:
+Un sidebar puede cerrarse con 4 acciones máximo, estas son:
 
 1. Click en el nodo o icono de apertura.
 2. Click en el nodo de cierre.
 3. Click fuera del contenedor.
+4. Click en un enlace dentro del contenedor
 
 Pero depende... :
 

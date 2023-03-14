@@ -276,7 +276,8 @@ class ToggleSidebar {
 
 		//clicked element
 		const clicked = evt.target;
-		//console.log(clicked);
+		console.log(clicked);
+
 		let sidebar;
 
 		//searching the first sidebar with openStatus = true.
@@ -295,11 +296,15 @@ class ToggleSidebar {
 		const sidebarClicked = clicked.closest(
 			"[data-sidebar=" + sidebar.name + "]"
 		);
+		// getting if link was clicked
+		const linkClicked = clicked.closest("a");
+
 		//comparing clicked element with open, close or inside sidebar
 		if (
 			clicked == openIcon ||
 			clicked == closeIcon ||
-			(sidebar.autoClose && sidebarClicked === null)
+			(sidebar.autoClose && sidebarClicked === null) ||
+			linkClicked !== null
 		) {
 			//removing body event listener in body (this helps avoid double listener)
 			window.removeEventListener("click", this.bodyActionHandler, false);
