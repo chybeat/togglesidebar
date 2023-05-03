@@ -12,6 +12,8 @@ _Sidebar hace referencia a barras laterales, menús o listados que pueden variar
 
 1. UNA MEJOR PÁGINA DE MUESTRA, la que está no solo da pena, sino que no la entiendo ni yo! (🤣😉)
 
+[https://chybeat.github.io/togglesidebar/](https://chybeat.github.io/togglesidebar/)
+
 ---
 
 # Tabla de contenido
@@ -50,7 +52,7 @@ Este plugin no está pensado visualmente, solo funcionalmente, es decir, para qu
 1. El plugin se puede obtener con la version reducida (minificada) o la version de desarrollo con algunos comentarios. No es documentación.
 1. Insisto en la "separación de responsabilidades" en varios apartados de este documento (y bromeo sobre ello) relativo a porque no escribí código para que el diseño se incluyera, pero existen varios factores a tener en cuenta para el diseño que son imposibles de agregar para una finalidad de "uso general" o implementación para cualquier proyecto sin dañar aspectos de diseño. El ejemplo más claro es el ancho del sidebar, que aunque se pueda realizar por medio de un standard de Ej: 300px, posiblemente sea o muy ancho o muy estrecho, sin contar que posiblemente se quiera a la derecha, abajo y que todos estos parametros son más faciles de arreglar desde CSS que modificar código CSS para que se adapte.
 1. Muchas letras!!, lo sé. Espero ser claro en todo lo que se expresa, pero si pido disculpas por los textos tan largos y que probablemente puedan realizarse con mucho menos contenido.
-1. Existe un archivo html con una muestra del plugin implementando 2 sidebars, por ahora solo es para exploración. Espero hacerla mejor.
+1. Existe un archivo html con una muestra del plugin implementando 2 sidebars, por ahora solo es para exploración. Espero hacerla mejor. [https://chybeat.github.io/togglesidebar/](https://chybeat.github.io/togglesidebar/)
 
 ---
 
