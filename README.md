@@ -11,6 +11,9 @@ _Sidebar hace referencia a barras laterales, menús o listados que pueden variar
 ## POR HACER
 
 1. UNA MEJOR PÁGINA DE MUESTRA, la que está no solo da pena, sino que no la entiendo ni yo! (🤣😉)
+1. Intentar que al hacer el gesto de deslizar un lado (derecha por ejemlo) aparezca el sidebar (en mobiles unicamente, en desktop solo sería la muestra)
+1. Metodos de la clase, hay uno que es mejor explicar bien! (addSidebar) 😉. Los otros son de uso interno pero no está de más explicar que hacen (die, init, getArrayNodes, closeSidebar, execute, openSidebar, sidebarBodyListener) (tanto en README.md como en la página)
+1. Propiedades de la clase no está de más explicarlas tambien!
 
 [https://chybeat.github.io/togglesidebar/](https://chybeat.github.io/togglesidebar/)
 
