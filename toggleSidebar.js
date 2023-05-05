@@ -205,15 +205,16 @@ class ToggleSidebar {
 			sidebarInfo.name = node.dataset.sidebar;
 			sidebarInfo.activationClass = node.dataset.sidebarActivateClass;
 			sidebarInfo.containerNode = node;
+			sidebarInfo.openSidebarNode = [];
+			sidebarInfo.closeSidebarNode = [];
 			sidebarInfo.omitClose = [];
 			this.sidebarsElements.forEach((el) => {
 				if (sidebarInfo.name == el.dataset.sidebar) {
 					if (el.dataset.sidebarAction == "open") {
-						console.log(el);
-						sidebarInfo.openSidebarNode = el;
+						sidebarInfo.openSidebarNode.push(el);
 					}
 					if (el.dataset.sidebarAction == "close") {
-						sidebarInfo.closeSidebarNode = el;
+						sidebarInfo.closeSidebarNode.push(el);
 					}
 					if (el.dataset.sidebarAction == "omit-close") {
 						sidebarInfo.omitClose.push(el);
@@ -312,11 +313,9 @@ class ToggleSidebar {
 			// remove saidebar open status
 			sidebar.openStatus = false;
 			// adding event listener to sidebar open node
-			sidebar.openSidebarNode.addEventListener(
-				"mousedown",
-				this.openActionHandler,
-				false
-			);
+			sidebar.openSidebarNode.forEach((node) => {
+				node.addEventListener("mousedown", this.openActionHandler, false);
+			});
 		} else {
 			// adding listener to body. This will compare the next user clicked node
 			window.addEventListener("mousedown", this.bodyActionHandler, false);
@@ -339,16 +338,20 @@ class ToggleSidebar {
 		window.removeEventListener("mousedown", this.bodyActionHandler, false);
 		this.sidebarsList.forEach((sidebar) => {
 			if (typeof sidebar.containerNode.dataset.initialized == "undefined") {
-				sidebar.openSidebarNode.removeEventListener(
-					"mousedown",
-					this.openActionHandler,
-					false
-				);
-				sidebar.openSidebarNode.addEventListener(
-					"mousedown",
-					this.openActionHandler,
-					false
-				);
+				sidebar.openSidebarNode.forEach((node) => {
+					node.removeEventListener(
+						"mousedown",
+						this.openActionHandler,
+						false
+					);
+				});
+				sidebar.openSidebarNode.forEach((node) => {
+					node.addEventListener(
+						"mousedown",
+						this.openActionHandler,
+						false
+					);
+				});
 				sidebar.containerNode.dataset.initialized = true;
 			}
 		});
@@ -366,11 +369,13 @@ class ToggleSidebar {
 				if (clickedElement.dataset.sidebar == sidebar.name) {
 					//removing open listener to add later a close function to
 					//sidebar open node
-					sidebar.openSidebarNode.removeEventListener(
-						"mousedown",
-						this.openActionHandler,
-						false
-					);
+					sidebar.openSidebarNode.forEach((node) => {
+						node.removeEventListener(
+							"mousedown",
+							this.openActionHandler,
+							false
+						);
+					});
 					// adding sidebar activation class to HTML body node
 					this.body.classList.add(sidebar.activationClass);
 					sidebar.openStatus = true;
