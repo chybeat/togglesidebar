@@ -6,112 +6,19 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>Toggle Sidebar plugin</title>
-	<script src="toggleSidebar.min.js"></script>
+
+	<!-- Libraries -->
+	<!-- Toggle sidebar-->
+	<!-- <script src="toggleSidebar.min.js"></script> -->
 	<script src="toggleSidebar.js"></script>
 
-	<style>
-		* {
-			padding: 0;
-			margin: 0;
-			box-sizing: border-box;
-		}
+	<!-- Prism CSS-->
+	<link href="./modules/prism.css" rel="stylesheet" />
 
-		:root {
-			--sidebar-with: 18em;
-		}
+	<!-- WebPage CSS -->
+	<link href="css/main.min.css" rel="stylesheet" />
 
-		html {
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-		}
-
-
-		main {
-			text-align: center;
-		}
-
-		body {
-			overflow-x: hidden;
-		}
-
-		header {
-			padding: 1em;
-			text-align: center;
-		}
-
-		.button {
-			text-decoration: none;
-			text-transform: capitalize;
-			color: black;
-			display: inline-block;
-			margin: 1em auto;
-			padding: 2em 4em;
-			border-radius: 1em;
-			background-color: #025f13;
-		}
-
-		.button-lightRed {
-			background-color: pink;
-		}
-
-		.button-red {
-			background-color: red;
-		}
-
-		.close-sidebar {
-			display: inline-block;
-			padding: 1em;
-			position: absolute;
-			right: 0.5em;
-			top: 0.5em
-		}
-
-		.omit-p {
-			padding: 0.5em;
-			border: 1px solid #000;
-			border-radius: .25em;
-			width: 17em;
-			margin: 1em auto 0;
-		}
-
-		#left-sidebar,
-		#right-sidebar {
-			background-color: darkgrey;
-			border: 1px solid #000;
-			height: 100dvh;
-			padding: 5em 1em;
-			position: fixed;
-			top: 0;
-			transition-duration: 0.3s;
-			transition-property: transform;
-			transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-			width: min(var(--sidebar-with), 90%);
-			z-index: 1
-		}
-
-		#left-sidebar {
-			left: 0;
-			transform: translate(calc(min(var(--sidebar-with), 100%) * -1), 0);
-
-		}
-
-		#right-sidebar {
-			right: 0;
-			transform: translate(min(var(--sidebar-with), 100%), 0);
-
-		}
-
-		body:is(.show-left-sidebar) #left-sidebar {
-			transform: translate(0, 0);
-
-		}
-
-		body:is(.show-right-sidebar) #right-sidebar {
-			transform: translate(0, 0);
-		}
-	</style>
 </head>
-
-<!-- <body class="show-right-sidebar"> -->
 
 <body>
 	<header>
@@ -120,21 +27,71 @@
 	<main>
 		<section id="what-is-this">
 			<h2>What is a sidebar?</h2>
-			<p>A 'sidebar' is an area located in one side of the window or screen that contains categorized (or not)
-				information. The toggle sidebar plugin can help to show and hide that information in the screen and response
+			<p>A <strong><dfn>sidebar</dfn></strong> for this plugin is considetared an area located in one side of the
+				window or screen
+				that
+				contains categorized (or not)
+				information. The toggle sidebar plugin "can help" to show and hide that information in the screen and
+				response
 				to clicks.</p>
 			<p>This page is intented to show how the plugin works and some requirements to get the job done.</p>
 			<hr>
 		</section>
 		<section id="plugin-use">
 			<article id="">
-
+				<h2>How to use</h2>
+				<ol>
+					<li>Add the <code>toggleSidebar.min.js</code> file to project
+						<script type="text/plain" class="language-html"><head>
+	...
+	<script type="text/javascript" src="path/to/toggleSidebar.min.js">
+</head></script>
+					</li>
+					<li>Initialize the pluging at least after all HTML code is loaded or before close the body tag. The
+						example
+						shows the minimum object properties required to get a workable sidebar.
+						<script type="text/plain" class="language-js">window.addEventListener("DOMContentLoaded", (event) => {
+	const sidebar = new ToggleSidebar({
+		activationClass: "other-menu",
+		closeSidebarNode: document.querySelector("#other-area .close-icon"),
+		containerNode: document.getElementById("other-area"),
+		omitCloseNode: ["#omit-close-any-sb"],
+		openSidebarNode: document.getElementById("#show-other-info-icon"),
+	});
+});
+</script>
+					</li>
+					<li>Click <a href="javascript:void(0)" id="how-to-use-demo">here</a> to show a working demo sidebar.
+						There you will find all HTML and JS code used (checkout the JS object used) to get it up and running.
+					</li>
+				</ol>
+				<div class="sidebar-container" id="how-to-use-demo-sb-container">
+					<h3>"How to use" demo sidebar</h3>
+					<h4>The code:</h4>
+					<pre><code class="language-html"></code></pre>
+					<pre><code class="language-js"></code></pre>
+					<h4>Remarks:</h4>
+					<ul>
+						<li>This sidebar uses a CSS code <a href="#css-code">explained later</a>, you need to do some
+							experiments to make it work as you want.</li>
+						<li>As you will (or have) noticed, if you click on a link inside a sidebar, the sidebar will close. If
+							the link leads to another page, no one cares, but if it links to any area of the same page, the
+							sidebar can be awkward to read the content behind.</li>
+						<li>A sidebar, can appears from top or bottom (CSS control that) </li>
+						<li>You can set a sidebar open element into any sidebar. Try to open the <a href="javascript:void(0)"
+								class="showme-right-sidebar">Right sidebar</a></li>
+						<li>If you want to hide this sidebar, click outside</li>
+						<li></li>
+					</ul>
+				</div>
 			</article>
 		</section>
 
 
-		<p><a href="#" id="showme-left-sidebar">Click here</a> to open a ◀⬅⬅⬅ <strong>LEFT</strong> sidebar</p>
-		<p><a href="#" id="showme-right-sidebar">Click here</a> to open a <strong>RIGHT➡➡➡▶</strong> sidebar</p>
+		<p><a href="javascript:void(0)" class="showme-left-sidebar">Click here</a> to open a ◀⬅⬅⬅ <strong>LEFT</strong>
+			sidebar</p>
+		<p><a href="javascript:void(0)" class="showme-right-sidebar">Click here</a> to open a <strong>RIGHT➡➡➡▶</strong>
+			sidebar</p>
 		<p><strong>Remember:</strong> If you click outside sidebar or "Close" link, the sidebar hiddes.</p>
 		<hr><br><br>
 		<h3>BUT!...</h3> If you click the following buttons, the sidebars can or not be closed</p>
@@ -149,12 +106,12 @@
 		<a href="#" class="button button-lightRed omit-left-sidebar-close">Keep my ◀⬅left sidebar open!</a>
 
 	</main>
-	<section id="left-sidebar">
+	<section class="sidebar-container" id="left-sidebar">
 		<h2>THE left sidebar</h2>
 		<p><strong>LEFT LEFT LEFT</strong></p>
 		<a href="#" class="close-sidebar">Close</a>
 	</section>
-	<section id="right-sidebar">
+	<section class="sidebar-container" id="right-sidebar">
 		<h2>THE right sidebar</h2>
 		<p><strong>RIGHT RIGHT RIGHT</strong></p>
 		<a href="#" class="close-sidebar">Close</a>
@@ -170,7 +127,7 @@
 			closeSidebarNode: "#right-sidebar .close-sidebar",
 			containerNode: "#right-sidebar",
 			omitCloseNode: ([".omit-right-sidebar-close", "#no-close-sidebars"]),
-			openSidebarNode: document.querySelector("#showme-right-sidebar")
+			openSidebarNode: document.querySelectorAll(".showme-right-sidebar")
 		})
 
 		toggleSidebar.addSidebar({
@@ -180,10 +137,19 @@
 			closeSidebarNode: document.querySelector("#left-sidebar .close-sidebar"),
 			containerNode: document.getElementById("left-sidebar"),
 			omitCloseNode: ([".omit-left-sidebar-close", "#no-close-sidebars"]),
-			openSidebarNode: document.querySelector("#showme-left-sidebar"),
+			openSidebarNode: document.querySelectorAll(".showme-left-sidebar"),
 		});
-		// });
+
+		toggleSidebar.addSidebar({
+			name: "how-to-use-demo",
+			activationClass: "show-how-to-use-demo",
+			autoClose: true,
+			//closeSidebarNode: document.querySelector("#left-sidebar .close-sidebar"),
+			containerNode: document.getElementById("how-to-use-demo-sb-container"),
+			openSidebarNode: document.querySelector("#how-to-use-demo"),
+		});
 	</script>
+	<script src="./modules/prism.js"></script>
 </body>
 
 </html>

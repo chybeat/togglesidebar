@@ -119,26 +119,28 @@ class ToggleSidebar {
 		}
 
 		/* omitClose nodes*/
-		// getArrayNodes will search for nodes in current document
-		sidebar.omitCloseNode = this.getArrayNodes(sidebar.omitCloseNode);
-		if (!(sidebar.omitCloseNode instanceof Array)) {
-			errorMsg.push(
-				"'omitCloseNode' attribute can be an array or string but needs to exists in the HTML code"
-			);
-		} else {
-			sidebar.omitCloseNode.forEach((nodeList) => {
-				nodeList.forEach((node) => {
-					let barsArray = [];
-					if (typeof node.dataset.sidebarOmit === "undefined") {
-						barsArray.push(sidebar.name);
-					} else {
-						barsArray.push(node.dataset.sidebarOmit.split(","));
-						barsArray.push(sidebar.name);
-					}
-					node.dataset.sidebarOmit = barsArray;
-					node.dataset.sidebarAction = "omit-close";
+		if (typeof sidebar.closeSidebarNode !== "undefined") {
+			// getArrayNodes will search for nodes in current document
+			sidebar.omitCloseNode = this.getArrayNodes(sidebar.omitCloseNode);
+			if (!(sidebar.omitCloseNode instanceof Array)) {
+				errorMsg.push(
+					"'omitCloseNode' attribute can be an array or string but needs to exists in the HTML code"
+				);
+			} else {
+				sidebar.omitCloseNode.forEach((nodeList) => {
+					nodeList.forEach((node) => {
+						let barsArray = [];
+						if (typeof node.dataset.sidebarOmit === "undefined") {
+							barsArray.push(sidebar.name);
+						} else {
+							barsArray.push(node.dataset.sidebarOmit.split(","));
+							barsArray.push(sidebar.name);
+						}
+						node.dataset.sidebarOmit = barsArray;
+						node.dataset.sidebarAction = "omit-close";
+					});
 				});
-			});
+			}
 		}
 
 		//verifying open sidebar nodes exists
@@ -146,7 +148,6 @@ class ToggleSidebar {
 			sidebar.openSidebarNode,
 			"open sidebar node"
 		);
-
 		if (!(sidebar.openSidebarNode instanceof Array)) {
 			errorMsg.push(
 				"Especified open sidebar node is not valid or not found"
@@ -208,6 +209,7 @@ class ToggleSidebar {
 			this.sidebarsElements.forEach((el) => {
 				if (sidebarInfo.name == el.dataset.sidebar) {
 					if (el.dataset.sidebarAction == "open") {
+						console.log(el);
 						sidebarInfo.openSidebarNode = el;
 					}
 					if (el.dataset.sidebarAction == "close") {
@@ -249,7 +251,7 @@ class ToggleSidebar {
 			}
 		}
 		// verifying for node (.nodeType === 1)
-		if ((data !== null && data.nodeType) === 1) {
+		if (data !== null && data.nodeType === 1) {
 			//if node is passed it will create a unique attribute
 			const attName = "togglesidebarwrapnodelist" + Date.now();
 			data.setAttribute(attName, "");
@@ -357,36 +359,37 @@ class ToggleSidebar {
 		//The real action to open a sidebar is adding to body the activation CSS class
 		//stop event propagation to avoid double click actions
 		event.stopPropagation();
-
-		//clicked element
-		const clickedElement = event.target;
-		this.sidebarsList.forEach((sidebar) => {
-			if (clickedElement.dataset.sidebar == sidebar.name) {
-				//removing open listener to add later a close function to
-				//sidebar open node
-				sidebar.openSidebarNode.removeEventListener(
-					"mousedown",
-					this.openActionHandler,
-					false
-				);
-				// adding sidebar activation class to HTML body node
-				this.body.classList.add(sidebar.activationClass);
-				sidebar.openStatus = true;
-				//Timeout to add the close functionality in open node
-				setTimeout(
-					(that) => {
-						that.closeActionHandler(sidebar, false);
-					},
-					50,
-					this
-				);
-			} else if (sidebar.openStatus === true) {
-				//if any sidebar is opened for any reason and is not the
-				//clicked open sidebar node relative sidebar node, foreced sidebar
-				//close command is triggered to avoid showing double sidebar
-				this.closeActionHandler(sidebar, true);
-			}
-		});
+		if (event.button == 0) {
+			//clicked element
+			const clickedElement = event.target;
+			this.sidebarsList.forEach((sidebar) => {
+				if (clickedElement.dataset.sidebar == sidebar.name) {
+					//removing open listener to add later a close function to
+					//sidebar open node
+					sidebar.openSidebarNode.removeEventListener(
+						"mousedown",
+						this.openActionHandler,
+						false
+					);
+					// adding sidebar activation class to HTML body node
+					this.body.classList.add(sidebar.activationClass);
+					sidebar.openStatus = true;
+					//Timeout to add the close functionality in open node
+					setTimeout(
+						(that) => {
+							that.closeActionHandler(sidebar, false);
+						},
+						50,
+						this
+					);
+				} else if (sidebar.openStatus === true) {
+					//if any sidebar is opened for any reason and is not the
+					//clicked open sidebar node relative sidebar node, foreced sidebar
+					//close command is triggered to avoid showing double sidebar
+					this.closeActionHandler(sidebar, true);
+				}
+			});
+		}
 	}
 
 	sidebarBodyListener(evt) {
@@ -395,53 +398,58 @@ class ToggleSidebar {
 
 		//stop event propagation to avoid double click actions
 		evt.stopPropagation();
+		if (evt.button == 0) {
+			//clicked element
+			const clicked = evt.target;
+			let sidebar;
 
-		//clicked element
-		const clicked = evt.target;
-		let sidebar;
-
-		//searching the first sidebar with openStatus = true.
-		//Any other sidebar was closed in openSidebar function
-		this.sidebarsList.forEach((testbar) => {
-			if (testbar.openStatus) {
-				sidebar = testbar;
-				return;
-			}
-		});
-
-		//getting sidebar container node
-		const sidebarClicked = clicked.closest(
-			"[data-sidebar=" + sidebar.name + "]"
-		);
-		// getting if link was clicked
-		const linkClicked = clicked.closest("a");
-
-		//comparing clicked element with open, close or inside sidebar
-		///aqui va lo que se debe omitir
-		let omitClose = false;
-
-		if (
-			typeof clicked.dataset.sidebarAction != "undefined" &&
-			clicked.dataset.sidebarAction == "omit-close"
-		) {
-			clicked.dataset.sidebarOmit.split(",").forEach((name) => {
-				if (sidebar.name == name) {
-					omitClose = true;
+			//searching the first sidebar with openStatus = true.
+			//Any other sidebar was closed in openSidebar function
+			this.sidebarsList.forEach((testbar) => {
+				if (testbar.openStatus) {
+					sidebar = testbar;
+					return;
 				}
 			});
-		}
 
-		if (
-			(clicked == sidebar.openSidebarNode ||
-				clicked == sidebar.closeSidebarNode ||
-				(sidebar.autoClose && sidebarClicked === null) ||
-				linkClicked !== null) &&
-			!omitClose
-		) {
-			//removing body event listener in body (this helps avoid double listener)
-			window.removeEventListener("mousedown", this.bodyActionHandler, false);
-			//forcing sidebar close
-			this.closeActionHandler(sidebar, true);
+			//getting sidebar container node
+			const sidebarClicked = clicked.closest(
+				"[data-sidebar=" + sidebar.name + "]"
+			);
+			// getting if link was clicked
+			const linkClicked = clicked.closest("a");
+
+			//comparing clicked element with open, close or inside sidebar
+			///aqui va lo que se debe omitir
+			let omitClose = false;
+
+			if (
+				typeof clicked.dataset.sidebarAction != "undefined" &&
+				clicked.dataset.sidebarAction == "omit-close"
+			) {
+				clicked.dataset.sidebarOmit.split(",").forEach((name) => {
+					if (sidebar.name == name) {
+						omitClose = true;
+					}
+				});
+			}
+
+			if (
+				(clicked == sidebar.openSidebarNode ||
+					clicked == sidebar.closeSidebarNode ||
+					(sidebar.autoClose && sidebarClicked === null) ||
+					linkClicked !== null) &&
+				!omitClose
+			) {
+				//removing body event listener in body (this helps avoid double listener)
+				window.removeEventListener(
+					"mousedown",
+					this.bodyActionHandler,
+					false
+				);
+				//forcing sidebar close
+				this.closeActionHandler(sidebar, true);
+			}
 		}
 	}
 }
