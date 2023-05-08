@@ -4,14 +4,10 @@
 	box-sizing: border-box;
 }
 
-:root {
-	--sidebar-with: 18em;
-}
 
 html {
-	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	font-family: sans-serif;
 }
-
 
 body {
 	overflow-x: hidden;
@@ -21,6 +17,20 @@ body {
 header {
 	padding: 1em;
 	text-align: center;
+}
+
+h2 {
+	margin: 1em auto 0.75em
+}
+
+h3,
+h4 {
+	margin: 1.5em auto 1em
+}
+
+
+p {
+	margin: 1em auto;
 }
 
 .button {
@@ -42,85 +52,18 @@ header {
 	background-color: red;
 }
 
-.close-sidebar {
-	display: inline-block;
-	padding: 1em;
-	position: absolute;
-	right: 0.5em;
-	top: 0.5em
-}
-
-.omit-p {
-	padding: 0.5em;
-	border: 1px solid #000;
-	border-radius: .25em;
-	width: 17em;
-	margin: 1em auto 0;
-}
-
-.sidebar-container {
-	background-color: darkgrey;
-	border: 1px solid #000;
-	height: 100dvh;
-	overflow-y: auto;
-	padding: 1em;
-	position: fixed;
-	top: 0;
-	transition-duration: 0.3s;
-	transition-property: transform;
-	transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-	width: min(var(--sidebar-with), 90%);
-	z-index: 1
-}
-
-#left-sidebar {
-	left: 0;
-	transform: translate(calc(min(var(--sidebar-with), 100%) * -1), 0);
-
-	.extra-close {
-		position: static;
-		cursor: pointer;
-
-		&:hover {
-			color: blue;
-			text-decoration: underline;
-		}
+#complete-demo {
+	.center-view {
+		text-align: center;
 	}
-}
 
-#right-sidebar {
-	right: 0;
-	transform: translate(min(var(--sidebar-with), 100%), 0);
-}
-
-#how-to-use-plugin {
-	width: min(43em, 90%);
-	left: 0;
-	transform: translate(min(calc(43em * -1), 100%), 0);
-}
-
-.text-open-sidebar {
-	display: inline-block;
-	cursor: pointer;
-	color: blue;
-	text-decoration: underline;
-
-	&:hover {
-		background-color: lightgray;
+	.button {
+		display: block;
+		width: max-content;
 	}
-}
 
-
-body:is(.show-left-sidebar) #left-sidebar {
-	transform: translate(0, 0);
-
-}
-
-
-body:is(.show-right-sidebar) #right-sidebar {
-	transform: translate(0, 0);
-}
-
-body:is(.show-how-to-use-demo) #how-to-use-plugin {
-	transform: translate(0, 0);
+	.whisper {
+		display: block;
+		font-size: 0.75em;
+	}
 }

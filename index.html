@@ -28,12 +28,8 @@
 		<section id="what-is-this">
 			<h2>What is a sidebar?</h2>
 			<p>A <strong><dfn>sidebar</dfn></strong> for this plugin is considetared an area located in one side of the
-				window or screen
-				that
-				contains categorized (or not)
-				information. The toggle sidebar plugin "can help" to show and hide that information in the screen and
-				response
-				to clicks.</p>
+				window or screen that contains categorized (or not) information. The toggle sidebar plugin "can help" to
+				show and hide that information in the screen and response o clicks.</p>
 			<p>This page is intented to show how the plugin works and some requirements to get the job done.</p>
 			<hr>
 		</section>
@@ -49,37 +45,95 @@
 				<p>2. Initialize the pluging at least after all HTML code is loaded or before close the body tag. The
 					example
 					shows the minimum object properties required to get a workable sidebar.
-					<script type="text/plain" class="language-js">window.addEventListener("DOMContentLoaded", (event) => {
+				<pre><code class="language-js">window.addEventListener("DOMContentLoaded", (event) => {
 	const sidebar = new ToggleSidebar({
-		activationClass: "other-menu",
-		closeSidebarNode: document.querySelector("#other-area .close-icon"),
-		containerNode: document.getElementById("other-area"),
-		omitCloseNode: ["#omit-close-any-sb"],
-		openSidebarNode: document.getElementById("#show-other-info-icon"),
+		activationClass: "main-menu",
+		containerNode: document.getElementById("menu"),
+		openSidebarNode: document.getElementById("#icon-main-menu"),
 	});
-});</script>
+})</code></pre>
 				</p>
-				<p>3. Add the requeired CSS code to makit things happen</p>
+				<p>3. Add the required CSS code to make things happen</p>
 				<p>Click <span id="how-to-use-demo" class="text-open-sidebar">here </span> to show a working demo
 					sidebar.
 					There you will find all HTML and JS code used (checkout the JS object used) to get it up and running.
 				</p>
-				<div class="sidebar-container" id="how-to-use-plugin">
-					<h3>"How to use" sidebar demo</h3>
-					<p>Code used:</p>
-					<script type="text/plain" class="language-html"><li>
-	Click <span id="how-to-use-demo">here </span> to show a work...
+			</article>
+		</section>
+		<section>
+			<div id="complete-demo">
+				<h2>A complete unrealistic demo</h2>
+				<p>Here you will find a complete (and probably unrealistic) demo. See the code in the corresponding sidebar
+				</p>
+				<div class="center-view">
+					<p><a href="javascript:void(0)" class="showme-left-sidebar">Click here</a> to open a ◀⬅⬅⬅
+						<strong>LEFT</strong>
+						sidebar
+					</p>
+					<p><a href="javascript:void(0)" class="showme-right-sidebar">Click here</a> to open a
+						<strong>RIGHT➡➡➡▶</strong>
+						sidebar
+					</p>
+					<p><strong>Remember:</strong> If you click outside sidebar or "Close" the sidebar hiddes.</p>
+					<h3>BUT!...</h3> If you click the following buttons, the sidebars can or not be closed</p>
+
+					<a href="javascript:void(0)" class="button button-lightRed omit-left-sidebar-close">Keep my ◀⬅left
+						sidebar open! <span class="whisper omit-left-sidebar-close">(closes any other sidebar)</span></a>
+
+					<p id="no-close-sidebars" class="omit-p button button-red">Clicking on this paragraph <br>◀⬅will not
+						close right or left➡▶ sidebars!<span class="whisper">(closes any other
+							sidebar)</span></p>
+
+					<a href="javascript:void(0)" class="button button-lightRed omit-right-sidebar-close">Keep Open ➡▶ right
+						sidebar!<span class="whisper omit-right-sidebar-close">(closes any other
+							sidebar)</span></a>
+				</div>
+		</section>
+	</main>
+
+	<section class="sidebar-container" id="left-sidebar">
+		<span class="close-sidebar text-open-sidebar">Close</span>
+		<h2>THE left sidebar</h2>
+		<p><strong>LEFT LEFT LEFT</strong></p>
+		<p class="close-sidebar extra-close">Close clicking this text</span>
+	</section>
+	<section class="sidebar-container" id="right-sidebar">
+		<h2>THE right sidebar</h2>
+		<p><strong>RIGHT RIGHT RIGHT</strong></p>
+		<span class="close-sidebar text-open-sidebar">Close</span>
+	</section>
+	<section class="sidebar-container" id="how-to-use-plugin">
+		<h3>"How to use" sidebar demo</h3>
+		<h4>Remarks:</h4>
+		<ul>
+			<li>This sidebar uses a CSS code <a href="#css-code">explained later</a>, you need to do some
+				experiments to make it work as you want.</li>
+			<li>As you will (or have) noticed, if you click on a link inside a sidebar, the sidebar will close. If
+				the link leads to another page, no one cares, but if it links to any area of the same page, the
+				sidebar can be awkward to read the content behind on narrow screens.</li>
+			<li>A sidebar, can appears from top or bottom (CSS control that) </li>
+			<li>You can set a sidebar open element into any sidebar. Try to open the <a href="javascript:void(0)"
+					class="showme-right-sidebar">Right sidebar</a></li>
+			<li>If you want to hide this sidebar, click outside of it, or open another sidebar, like the <span
+					href="javascript:void(0)" class="text-open-sidebar showme-left-sidebar">Left Sidebar</span></li>
+		</ul>
+
+		<h4>Code used:</h4>
+		<script type="text/plain" class="language-html"><li>
+	Click <span id="how-to-use-demo">here</span> to show a work...
 </li>
-						</script>
-					<pre><code class="language-js">toggleSidebar.addSidebar({
+<div class="sidebar-container" id="how-to-use-plugin">
+	<h3>"How to use" sidebar demo</h3>
+	<p>Code used:</p>
+	...
+</div></script>
+		<pre><code class="language-js">toggleSidebar.addSidebar({
 	name: "how-to-use-demo",
 	activationClass: "show-how-to-use-demo",
-	autoClose: true,
 	containerNode: document.getElementById("how-to-use-plugin"),
 	openSidebarNode: document.querySelector("#how-to-use-demo"),
-});
-					</code></pre>
-					<pre><code class="language-css">.sidebar-container {
+});</code></pre>
+		<pre><code class="language-css">.sidebar-container {
 	background-color: darkgrey;
 	border: 1px solid #000;
 	height: 100dvh;
@@ -99,61 +153,15 @@
 	left: 0;
 	transform: translate(min(calc(43em * -1), 100%), 0);
 }
+
 /* Here is where the "activationClass"
 property on JavaScript code makes
 things happens */
 body:is(.show-how-to-use-demo) #how-to-use-plugin {
 	transform: translate(0, 0);
 }</code></pre>
-					<h4>Remarks:</h4>
-					<ul>
-						<li>This sidebar uses a CSS code <a href="#css-code">explained later</a>, you need to do some
-							experiments to make it work as you want.</li>
-						<li>As you will (or have) noticed, if you click on a link inside a sidebar, the sidebar will close. If
-							the link leads to another page, no one cares, but if it links to any area of the same page, the
-							sidebar can be awkward to read the content behind.</li>
-						<li>A sidebar, can appears from top or bottom (CSS control that) </li>
-						<li>You can set a sidebar open element into any sidebar. Try to open the <a href="javascript:void(0)"
-								class="showme-right-sidebar">Right sidebar</a></li>
-						<li>If you want to hide this sidebar, click outside of it, or open another sidebar, like the <span
-								href="javascript:void(0)" class="text-open-sidebar showme-left-sidebar">Left Sidebar</span></li>
-					</ul>
-				</div>
-			</article>
-		</section>
-
-
-		<p><a href="javascript:void(0)" class="showme-left-sidebar">Click here</a> to open a ◀⬅⬅⬅ <strong>LEFT</strong>
-			sidebar</p>
-		<p><a href="javascript:void(0)" class="showme-right-sidebar">Click here</a> to open a <strong>RIGHT➡➡➡▶</strong>
-			sidebar</p>
-		<p><strong>Remember:</strong> If you click outside sidebar or "Close" link, the sidebar hiddes.</p>
-		<hr><br><br>
-		<h3>BUT!...</h3> If you click the following buttons, the sidebars can or not be closed</p>
-
-		<a href="#" class="button button-lightRed omit-right-sidebar-close">Keep Open ➡▶ right sidebar!</a><br>
-
-		<p id="no-close-sidebars" class="omit-p button button-red">Clicking on this paragraph <br>◀⬅will not close right
-			or
-			left➡▶
-			sidebars!</p><br>
-
-		<a href="#" class="button button-lightRed omit-left-sidebar-close">Keep my ◀⬅left sidebar open!</a>
-
-	</main>
-	<section class="sidebar-container" id="left-sidebar">
-		<span class="close-sidebar text-open-sidebar">Close</span>
-		<h2>THE left sidebar</h2>
-		<p><strong>LEFT LEFT LEFT</strong></p>
-		<p class="close-sidebar extra-close">Close clicking this text</span>
-	</section>
-	<section class="sidebar-container" id="right-sidebar">
-		<h2>THE right sidebar</h2>
-		<p><strong>RIGHT RIGHT RIGHT</strong></p>
-		<span class="close-sidebar text-open-sidebar">Close</span>
 	</section>
 	<script>
-		// window.addEventListener("DOMContentLoaded", (event) => {
 		const toggleSidebar = new ToggleSidebar();
 
 		toggleSidebar.addSidebar({

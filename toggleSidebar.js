@@ -423,19 +423,13 @@ class ToggleSidebar {
 			// getting if link was clicked
 			const linkClicked = clicked.closest("a");
 
-			//comparing clicked element with open, close or inside sidebar
-			///aqui va lo que se debe omitir
+			//Checking if the clicked element has or is inside one with a dataset "sidebar-omit" property and the name of the currently open sidebar
 			let omitClose = false;
-
 			if (
-				typeof clicked.dataset.sidebarAction != "undefined" &&
-				clicked.dataset.sidebarAction == "omit-close"
+				clicked.closest("[data-sidebar-omit*=" + sidebar.name + "]") !==
+				null
 			) {
-				clicked.dataset.sidebarOmit.split(",").forEach((name) => {
-					if (sidebar.name == name) {
-						omitClose = true;
-					}
-				});
+				omitClose = true;
 			}
 
 			// comparing clicked element with any of the possible close elements
@@ -450,6 +444,7 @@ class ToggleSidebar {
 				}
 			});
 
+			//comparing clicked element with open, close or inside sidebar
 			if (
 				(clicked == sidebar.openSidebarNode ||
 					clickedCloseNode ||
