@@ -407,7 +407,6 @@ class ToggleSidebar {
 			//clicked element
 			const clicked = evt.target;
 			let sidebar;
-
 			//searching the first sidebar with openStatus = true.
 			//Any other sidebar was closed in openSidebar function
 			this.sidebarsList.forEach((testbar) => {
@@ -439,9 +438,21 @@ class ToggleSidebar {
 				});
 			}
 
+			// comparing clicked element with any of the possible close elements
+			let clickedCloseNode = false;
+
+			sidebar.closeSidebarNode.forEach((closeNode) => {
+				if (
+					closeNode.dataset.sidebar == clicked.dataset.sidebar &&
+					closeNode.dataset.sidebarAction == clicked.dataset.sidebarAction
+				) {
+					clickedCloseNode = true;
+				}
+			});
+
 			if (
 				(clicked == sidebar.openSidebarNode ||
-					clicked == sidebar.closeSidebarNode ||
+					clickedCloseNode ||
 					(sidebar.autoClose && sidebarClicked === null) ||
 					linkClicked !== null) &&
 				!omitClose

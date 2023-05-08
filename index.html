@@ -40,17 +40,16 @@
 		<section id="plugin-use">
 			<article id="">
 				<h2>How to use</h2>
-				<ol>
-					<li>Add the <code>toggleSidebar.min.js</code> file to project
-						<script type="text/plain" class="language-html"><head>
+				<p>1. Add the <code>toggleSidebar.min.js</code> file to project
+					<script type="text/plain" class="language-html"><head>
 	...
 	<script type="text/javascript" src="path/to/toggleSidebar.min.js">
 </head></script>
-					</li>
-					<li>Initialize the pluging at least after all HTML code is loaded or before close the body tag. The
-						example
-						shows the minimum object properties required to get a workable sidebar.
-						<script type="text/plain" class="language-js">window.addEventListener("DOMContentLoaded", (event) => {
+				</p>
+				<p>2. Initialize the pluging at least after all HTML code is loaded or before close the body tag. The
+					example
+					shows the minimum object properties required to get a workable sidebar.
+					<script type="text/plain" class="language-js">window.addEventListener("DOMContentLoaded", (event) => {
 	const sidebar = new ToggleSidebar({
 		activationClass: "other-menu",
 		closeSidebarNode: document.querySelector("#other-area .close-icon"),
@@ -58,18 +57,54 @@
 		omitCloseNode: ["#omit-close-any-sb"],
 		openSidebarNode: document.getElementById("#show-other-info-icon"),
 	});
+});</script>
+				</p>
+				<p>3. Add the requeired CSS code to makit things happen</p>
+				<p>Click <span id="how-to-use-demo" class="text-open-sidebar">here </span> to show a working demo
+					sidebar.
+					There you will find all HTML and JS code used (checkout the JS object used) to get it up and running.
+				</p>
+				<div class="sidebar-container" id="how-to-use-plugin">
+					<h3>"How to use" sidebar demo</h3>
+					<p>Code used:</p>
+					<script type="text/plain" class="language-html"><li>
+	Click <span id="how-to-use-demo">here </span> to show a work...
+</li>
+						</script>
+					<pre><code class="language-js">toggleSidebar.addSidebar({
+	name: "how-to-use-demo",
+	activationClass: "show-how-to-use-demo",
+	autoClose: true,
+	containerNode: document.getElementById("how-to-use-plugin"),
+	openSidebarNode: document.querySelector("#how-to-use-demo"),
 });
-</script>
-					</li>
-					<li>Click <a href="javascript:void(0)" id="how-to-use-demo">here</a> to show a working demo sidebar.
-						There you will find all HTML and JS code used (checkout the JS object used) to get it up and running.
-					</li>
-				</ol>
-				<div class="sidebar-container" id="how-to-use-demo-sb-container">
-					<h3>"How to use" demo sidebar</h3>
-					<h4>The code:</h4>
-					<pre><code class="language-html"></code></pre>
-					<pre><code class="language-js"></code></pre>
+					</code></pre>
+					<pre><code class="language-css">.sidebar-container {
+	background-color: darkgrey;
+	border: 1px solid #000;
+	height: 100dvh;
+	overflow-y: scroll;
+	padding: 1em;
+	position: fixed;
+	top: 0;
+	transition-duration: 0.3s;
+	transition-property: transform;
+	transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
+	width: min(var(--sidebar-with), 90%);
+	z-index: 1
+}
+
+#how-to-use-plugin {
+	width: min(43em, 90%);
+	left: 0;
+	transform: translate(min(calc(43em * -1), 100%), 0);
+}
+/* Here is where the "activationClass"
+property on JavaScript code makes
+things happens */
+body:is(.show-how-to-use-demo) #how-to-use-plugin {
+	transform: translate(0, 0);
+}</code></pre>
 					<h4>Remarks:</h4>
 					<ul>
 						<li>This sidebar uses a CSS code <a href="#css-code">explained later</a>, you need to do some
@@ -80,8 +115,8 @@
 						<li>A sidebar, can appears from top or bottom (CSS control that) </li>
 						<li>You can set a sidebar open element into any sidebar. Try to open the <a href="javascript:void(0)"
 								class="showme-right-sidebar">Right sidebar</a></li>
-						<li>If you want to hide this sidebar, click outside</li>
-						<li></li>
+						<li>If you want to hide this sidebar, click outside of it, or open another sidebar, like the <span
+								href="javascript:void(0)" class="text-open-sidebar showme-left-sidebar">Left Sidebar</span></li>
 					</ul>
 				</div>
 			</article>
@@ -107,14 +142,15 @@
 
 	</main>
 	<section class="sidebar-container" id="left-sidebar">
+		<span class="close-sidebar text-open-sidebar">Close</span>
 		<h2>THE left sidebar</h2>
 		<p><strong>LEFT LEFT LEFT</strong></p>
-		<a href="#" class="close-sidebar">Close</a>
+		<p class="close-sidebar extra-close">Close clicking this text</span>
 	</section>
 	<section class="sidebar-container" id="right-sidebar">
 		<h2>THE right sidebar</h2>
 		<p><strong>RIGHT RIGHT RIGHT</strong></p>
-		<a href="#" class="close-sidebar">Close</a>
+		<span class="close-sidebar text-open-sidebar">Close</span>
 	</section>
 	<script>
 		// window.addEventListener("DOMContentLoaded", (event) => {
@@ -124,7 +160,7 @@
 			name: "right-sidebar",
 			activationClass: "show-right-sidebar",
 			autoClose: true,
-			closeSidebarNode: "#right-sidebar .close-sidebar",
+			closeSidebarNode: document.querySelectorAll("#right-sidebar .close-sidebar"),
 			containerNode: "#right-sidebar",
 			omitCloseNode: ([".omit-right-sidebar-close", "#no-close-sidebars"]),
 			openSidebarNode: document.querySelectorAll(".showme-right-sidebar")
@@ -134,7 +170,7 @@
 			name: "left-sidebar",
 			activationClass: "show-left-sidebar",
 			autoClose: true,
-			closeSidebarNode: document.querySelector("#left-sidebar .close-sidebar"),
+			closeSidebarNode: document.querySelectorAll("#left-sidebar .close-sidebar"),
 			containerNode: document.getElementById("left-sidebar"),
 			omitCloseNode: ([".omit-left-sidebar-close", "#no-close-sidebars"]),
 			openSidebarNode: document.querySelectorAll(".showme-left-sidebar"),
@@ -143,9 +179,7 @@
 		toggleSidebar.addSidebar({
 			name: "how-to-use-demo",
 			activationClass: "show-how-to-use-demo",
-			autoClose: true,
-			//closeSidebarNode: document.querySelector("#left-sidebar .close-sidebar"),
-			containerNode: document.getElementById("how-to-use-demo-sb-container"),
+			containerNode: document.getElementById("how-to-use-plugin"),
 			openSidebarNode: document.querySelector("#how-to-use-demo"),
 		});
 	</script>
