@@ -51,7 +51,6 @@ class ToggleSidebar {
 				"An sidebar node (container or wrapper) was not specified"
 			);
 		}
-
 		if (typeof sidebar.openSidebarNode === "undefined") {
 			//if HTML open node was not specified
 			errorMsg.push("An opener (activate) node was not specified");
@@ -92,6 +91,9 @@ class ToggleSidebar {
 					nodeList.forEach((node) => {
 						node.dataset.sidebar = sidebar.name;
 						node.dataset.sidebarAction = "close";
+						node.addEventListener("click", function (evt) {
+							evt.preventDefault();
+						});
 					});
 				});
 			}
@@ -138,6 +140,9 @@ class ToggleSidebar {
 						}
 						node.dataset.sidebarOmit = barsArray;
 						node.dataset.sidebarAction = "omit-close";
+						node.addEventListener("click", function (evt) {
+							evt.preventDefault();
+						});
 					});
 				});
 			}
@@ -158,6 +163,9 @@ class ToggleSidebar {
 					//setting the HTML open node data- attributes in function parameter object
 					node.dataset.sidebar = sidebar.name;
 					node.dataset.sidebarAction = "open";
+					node.addEventListener("click", function (evt) {
+						evt.preventDefault();
+					});
 				});
 			});
 		}
@@ -307,18 +315,18 @@ class ToggleSidebar {
 
 		if (force) {
 			//removing body listener
-			window.removeEventListener("mousedown", this.bodyActionHandler, false);
+			window.removeEventListener("mouseup", this.bodyActionHandler, false);
 			// removing activation class
 			this.body.classList.remove(sidebar.activationClass);
 			// remove saidebar open status
 			sidebar.openStatus = false;
 			// adding event listener to sidebar open node
 			sidebar.openSidebarNode.forEach((node) => {
-				node.addEventListener("mousedown", this.openActionHandler, false);
+				node.addEventListener("mouseup", this.openActionHandler, false);
 			});
 		} else {
 			// adding listener to body. This will compare the next user clicked node
-			window.addEventListener("mousedown", this.bodyActionHandler, false);
+			window.addEventListener("mouseup", this.bodyActionHandler, false);
 		}
 	}
 
@@ -335,22 +343,18 @@ class ToggleSidebar {
 		//removing any possible event listener relative to ToggleSidebar in
 		//HTML body tag or sidebars open nodes
 
-		window.removeEventListener("mousedown", this.bodyActionHandler, false);
+		window.removeEventListener("mouseup", this.bodyActionHandler, false);
 		this.sidebarsList.forEach((sidebar) => {
 			if (typeof sidebar.containerNode.dataset.initialized == "undefined") {
 				sidebar.openSidebarNode.forEach((node) => {
 					node.removeEventListener(
-						"mousedown",
+						"mouseup",
 						this.openActionHandler,
 						false
 					);
 				});
 				sidebar.openSidebarNode.forEach((node) => {
-					node.addEventListener(
-						"mousedown",
-						this.openActionHandler,
-						false
-					);
+					node.addEventListener("mouseup", this.openActionHandler, false);
 				});
 				sidebar.containerNode.dataset.initialized = true;
 			}
@@ -362,6 +366,7 @@ class ToggleSidebar {
 		//The real action to open a sidebar is adding to body the activation CSS class
 		//stop event propagation to avoid double click actions
 		event.stopPropagation();
+
 		if (event.button == 0) {
 			//clicked element
 			const clickedElement = event.target;
@@ -371,7 +376,7 @@ class ToggleSidebar {
 					//sidebar open node
 					sidebar.openSidebarNode.forEach((node) => {
 						node.removeEventListener(
-							"mousedown",
+							"mouseup",
 							this.openActionHandler,
 							false
 						);
@@ -431,7 +436,6 @@ class ToggleSidebar {
 			) {
 				omitClose = true;
 			}
-
 			// comparing clicked element with any of the possible close elements
 			let clickedCloseNode = false;
 
@@ -443,18 +447,27 @@ class ToggleSidebar {
 					clickedCloseNode = true;
 				}
 			});
-
-			//comparing clicked element with open, close or inside sidebar
+			let closeWithOpenNode = false;
 			if (
 				(clicked == sidebar.openSidebarNode ||
+					sidebar.openSidebarNode.includes(clicked)) &&
+				!omitClose
+			) {
+				closeWithOpenNode = true;
+			}
+
+			if (
+				(clicked == sidebar.openSidebarNode ||
+					sidebar.openSidebarNode.includes(clicked) ||
 					clickedCloseNode ||
 					(sidebar.autoClose && sidebarClicked === null) ||
 					linkClicked !== null) &&
 				!omitClose
 			) {
+				//comparing clicked element with open node (two first lines), close or inside sidebar
 				//removing body event listener in body (this helps avoid double listener)
 				window.removeEventListener(
-					"mousedown",
+					"mouseup",
 					this.bodyActionHandler,
 					false
 				);

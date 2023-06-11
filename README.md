@@ -292,7 +292,7 @@ En general máximo son 4 y mínimo son 3, la variable es el click fuera del cont
 
 # Algo de CSS
 
-Debo aclarar que no ví viable colocar elementos de diseño en el plugin debido a la separación de funcionalidades (y el factor pereza???🤔😔), y ya que el plugin se debe ejecutar luego de cargar los elementos de la página (`window.addEventListener("DOMContentLoaded", () => {...})`) podría demorar demasiado en comenzar a mostrarse un sidebar o que se vean y desaparezcan elementos mientras se termina de cargar la página (como los sidebar saltando para ocultarse).
+Debo aclarar que no ví viable colocar elementos de diseño en el plugin debido a la separación de funcionalidades (y el factor pereza???🤔😔), y ya que el plugin se debe ejecutar luego de cargar los elementos de la página (`window.addEventListener("DOMContentLoaded", () => {...})`) podría demorar demasiado en comenzar a mostrarse un sidebar o que se vean y desaparezcan elementos mientras se termina de cargar la página (como los sidebar 'saltando' para ocultarse).
 
 El siguiente código es una muestra de cómo se puede manejar el código CSS de forma fácil y extremandamente sencilla para que la funcionalidad del plugin tenga su parte visual. Lee los comentarios para enterarte de algunos detalles
 

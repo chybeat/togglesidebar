@@ -1,6 +1,8 @@
 pre[class*="language-"] {
 	position: relative;
 	margin: 0.5em auto 1em;
+	width: fit-content;
+	max-width: calc(100%);
 
 	&:before {
 		content: "";

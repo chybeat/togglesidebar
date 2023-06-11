@@ -1,5 +1,6 @@
 :root {
-	--sidebar-with: 18em;
+	--sidebar-standard-with: 18em;
+	--sidebar-max-width: min(51%, calc(100vw - 4em))
 }
 
 .close-sidebar {
@@ -38,19 +39,24 @@
 	position: fixed;
 	top: 0;
 	transition-duration: 0.3s;
-	transition-property: transform;
 	transition-timing-function: cubic-bezier(0.22, 0.61, 0.36, 1);
-	width: min(var(--sidebar-with), 90%);
-	z-index: 1
+	width: min(var(--sidebar-standard-with), 90%);
+
+	z-index: 1;
+
+	pre {
+		width: 100%;
+
+		pre:last-child {
+			margin-bottom: 0;
+		}
+	}
 }
 
 #how-to-use-plugin {
 	transition-property: left;
-	width: min-content;
-	max-width: 90%;
-
-	left: -42em;
-	//left: 0;
+	width: min(55em, calc(100vw - 4em));
+	left: min(-55em, calc(-100vw - 4em));
 
 	ul {
 		padding-inline-start: 1.5em;
@@ -60,21 +66,17 @@
 		}
 	}
 
-
 	h3 {
 		text-align: center;
-	}
-
-	pre:last-child {
-		margin-bottom: 0;
 	}
 
 }
 
 #left-sidebar {
-	left: calc(var(--sidebar-with) * -1);
+	left: calc(var(--sidebar-max-width) * -1);
 	transition-property: left;
-	width: min(var(--sidebar-with), 90%);
+	width: fit-content;
+	max-width: var(--sidebar-max-width);
 
 	.extra-close {
 		position: static;
@@ -88,9 +90,9 @@
 }
 
 #right-sidebar {
-	right: calc(var(--sidebar-with) * -1);
+	right: calc(var(--sidebar-standard-with) * -1);
 	transition-property: right;
-	width: min(var(--sidebar-with), 90%);
+	width: min(var(--sidebar-standard-with), 90%);
 }
 
 body:is(.show-left-sidebar) #left-sidebar {
