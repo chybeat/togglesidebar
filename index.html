@@ -121,14 +121,14 @@ body:is(.show-main-menu) #main-menu {
 					<p>If you click the following buttons, the sidebars can or not be closed</p>
 
 					<a href="#" class="button button-lightRed omit-left-sidebar-close">Keep my ◀⬅left
-						sidebar open! <span class="whisper omit-left-sidebar-close">(closes any other sidebar)</span></a>
+						sidebar open! <span class="whisper">(closes any other sidebar)</span></a>
 
 					<p id="no-close-sidebars" class="omit-p button button-red">Clicking on this paragraph <br>◀⬅will not
 						close right or left➡▶ sidebars!<span class="whisper">(closes any other
 							sidebar)</span></p>
 
 					<a href="#" class="button button-lightRed omit-right-sidebar-close">Keep Open ➡▶ right
-						sidebar!<span class="whisper omit-right-sidebar-close">(closes any other
+						sidebar!<span class="whisper">(closes any other
 							sidebar)</span></a>
 				</div>
 			</article>
@@ -250,11 +250,17 @@ body:is(.show-how-to-use-demo) #how-to-use-plugin {
 		</section>
 	</aside>
 	<script>
-		const sbopen = document.querySelector("body")
-		//sbopen.classList.add("show-how-to-use-demo")
 
 		const toggleSidebar = new ToggleSidebar();
-
+		toggleSidebar.addSidebar({
+			name: "test-one-by-on",
+			activationClass: "show-right-sidebar",
+			autoClose: true,
+			closeSidebarNode: document.querySelectorAll("#right-sidebar .close-sidebar"),
+			containerNode: "#right-sidebar",
+			omitCloseNode: ([".omit-right-sidebar-close", "#no-close-sidebars"]),
+			openSidebarNode: document.querySelectorAll(".showme-right-sidebar")
+		})
 		toggleSidebar.addSidebar({
 			name: "right-sidebar",
 			activationClass: "show-right-sidebar",
@@ -281,6 +287,8 @@ body:is(.show-how-to-use-demo) #how-to-use-plugin {
 			containerNode: document.getElementById("how-to-use-plugin"),
 			openSidebarNode: document.querySelectorAll("span.how-to-use-demo-open-node"),
 		});
+
+		//toggleSidebar.toggle('how-to-use-demo');
 
 	</script>
 	<script src="./modules/prism.js"></script>

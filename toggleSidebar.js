@@ -1,8 +1,10 @@
 class ToggleSidebar {
-	name = "";
-	evtOpts = false;
 	addedSidebar = false;
 	initialized = false;
+	body = false;
+	sidebars = false;
+	sidebarElements = false;
+	sidebarList = false;
 
 	constructor(element) {
 		//Generating bind actions to listener functionality
@@ -18,9 +20,200 @@ class ToggleSidebar {
 			this.init();
 		}
 	}
+	//********************
+	//USER RELATIVE METHODS
+	//********************
 
 	addSidebar(sidebar) {
-		//function to add a sidebar. This adds to HTML nodes sidebar data- attributes
+		//function to add a sidebar. This adds to HTML nodes sidebar data- attributes using and fill class information using child functions
+		const errorText = "Configuration error when adding a toggle sidebar:";
+		let errorMsg = [];
+
+		//check addSidebar({}) Object Errors
+		this.addSidebar_SBOE(sidebar);
+
+		//check or generate sidebar name
+		sidebar.name = this.addSidebar_autoNaming(sidebar.name);
+
+		//set autoClose to true (close when click out of container) when no close node was specified.
+		//OR if sidebar.autoClose is specified it will be used.
+		//Default is false
+		const autoClose = !sidebar.closeSidebarNode || sidebar.autoClose || false;
+
+		//set close nodes
+		this.addSidebar_setCloseSidebarNodes(sidebar);
+
+		//set container node
+		this.addSidebar_setContainerSidebarNode(sidebar, autoClose);
+
+		if (typeof sidebar.omitCloseNode !== "undefined") {
+			this.addSidebar_setOmitCloseSidebarNodes(sidebar);
+		}
+
+		this.addSidebar_setOpenSidebarNode(sidebar);
+
+		this.addedSidebar = true;
+		this.init();
+	}
+
+	hide(sidebarName) {
+		setTimeout(
+			function () {
+				this.sidebarList.forEach((sidebar) => {
+					if (sidebar.name == sidebarName) {
+						if (sidebar.openStatus) {
+							this.closeActionHandler(sidebar, true);
+						}
+					}
+				});
+			}
+				.bind(this, sidebarName)
+				.bind(this, this),
+			1
+		);
+	}
+
+	init() {
+		//Plugin initialization to reading sidebar data- attributes
+
+		//sidebar containers
+		this.sidebars = document.querySelectorAll("[data-sidebar-container]");
+
+		//sidebar action buttons (open and close)
+		this.sidebarElements = document.querySelectorAll("[data-sidebar-action]");
+		//check existence of sidebar container AND elements
+		if (this.sidebars.length == 0 || this.sidebars.length == 0) {
+			return;
+		}
+		if (this.sidebars.length > 0) {
+			this.addedSidebar = true;
+		}
+		//Getting HTML body tag
+		this.body = document.querySelector("body");
+
+		this.sidebarList = [];
+		//getting and setting sidebars relative data (name, activation class,
+		//autoclose, openStatus) and open close nodes
+		this.sidebars.forEach((node) => {
+			let sidebarInfo = {};
+			sidebarInfo.name = node.dataset.sidebar;
+			sidebarInfo.activationClass = node.dataset.sidebarActivateClass;
+			sidebarInfo.containerNode = node;
+			sidebarInfo.openSidebarNode = [];
+			sidebarInfo.closeSidebarNode = [];
+			sidebarInfo.omitClose = [];
+			this.sidebarElements.forEach((el) => {
+				if (sidebarInfo.name == el.dataset.sidebar) {
+					if (el.dataset.sidebarAction == "open") {
+						sidebarInfo.openSidebarNode.push(el);
+					}
+					if (el.dataset.sidebarAction == "close") {
+						sidebarInfo.closeSidebarNode.push(el);
+					}
+				}
+				if (
+					el.dataset.sidebarAction == "omit-close" &&
+					el.dataset.sidebarOmit.includes(sidebarInfo.name)
+				) {
+					sidebarInfo.omitClose.push(el);
+				}
+			});
+
+			let autoClose = node.dataset.sidebarAutoClose == "true" || false;
+			if (!sidebarInfo.closeSidebarNode) {
+				autoClose = true;
+			}
+			sidebarInfo.autoClose = autoClose;
+			sidebarInfo.openStatus = false;
+			this.sidebarList.push(sidebarInfo);
+		});
+		if (this.sidebars.length > 0 && this.addedSidebar) {
+			this.execute();
+			this.initialized = true;
+		}
+	}
+
+	toggle(sidebarName) {
+		setTimeout(
+			function () {
+				this.sidebarList.forEach((sidebar) => {
+					if (sidebar.name == sidebarName) {
+						if (sidebar.openStatus) {
+							this.hide(sidebarName);
+						} else {
+							this.show(sidebarName);
+						}
+					}
+				});
+			}
+				.bind(this, sidebarName)
+				.bind(this, this),
+			1
+		);
+	}
+
+	show(sidebarName) {
+		//show sidebar emulating the mouse up event
+		setTimeout(
+			function () {
+				let openNode = false;
+				this.sidebarList.forEach((sidebar) => {
+					if (sidebar.name == sidebarName && !openNode) {
+						this.sidebarElements.forEach((node) => {
+							if (
+								node.dataset.sidebar == sidebarName &&
+								node.dataset.sidebarAction == "open"
+							) {
+								openNode = node;
+								return;
+							}
+						});
+					}
+				});
+				if (openNode !== false) {
+					const clickEvent = new MouseEvent("mouseup");
+					openNode.dispatchEvent(clickEvent);
+				} else {
+					this.die("Can't show sidebar", [
+						"Sidebar '" + sidebarName + "' not found or initialized",
+					]);
+				}
+			}
+				.bind(this, sidebarName)
+				.bind(this, this),
+			1
+		);
+	}
+	//********************************
+	//PLUGIN INTERNAL RELATIVE METHODS
+	//********************************
+
+	addSidebar_autoNaming(name) {
+		//if not sidebar name was specified a sidebar name will be created with current timestamp
+
+		if (this.sidebarList.length > 0) {
+			this.sidebarList.forEach((sidebar) => {
+				if (sidebar.name == name) {
+					this.die("Sidebar name exists!", [
+						"A sidebar called '" + name + "' is already added.",
+					]);
+				}
+			});
+		}
+
+		if (typeof name === "undefined") {
+			name = "ToggleSidebar-" + Date.now();
+			console.warn(
+				'A sidebar name was not specified. "' +
+					name +
+					'" will be used instead '
+			);
+		}
+		return name;
+	}
+
+	addSidebar_SBOE(sidebar) {
+		//addSidebar({sidebar}) Object Error
 		const errorText = "Configuration error when adding a toggle sidebar:";
 		let errorMsg = [];
 
@@ -29,7 +222,7 @@ class ToggleSidebar {
 		*/
 		if (!(sidebar instanceof Object) && sidebar !== null) {
 			//if function param is not and object
-			errorMsg.push("addSidebar function requires an JS object");
+			errorMsg.push("addSidebar function requires pass an JS object");
 		}
 
 		if (typeof sidebar.activationClass === "undefined") {
@@ -59,22 +252,9 @@ class ToggleSidebar {
 			//throw error (finalize executuion) if any error was found
 			this.die(errorText, errorMsg);
 		}
+	}
 
-		//if not sidebar name was specified a sidebar name will be created with current timestamp
-		if (typeof sidebar.name === "undefined") {
-			sidebar.name = "ToggleSidebar-" + Date.now();
-			console.warn(
-				'A sidebar name was not specified. "' +
-					sidebar.name +
-					'" will be used instead '
-			);
-		}
-
-		//set autoClose to true (close when click out of container) when no close node was specified.
-		//OR if sidebar.autoClose is specified it will be used.
-		//Default is false
-		const autoClose = !sidebar.closeSidebarNode || sidebar.autoClose || false;
-
+	addSidebar_setCloseSidebarNodes(sidebar) {
 		//if close node was specified in function parameter object will add the dataset propierties
 		if (typeof sidebar.closeSidebarNode !== "undefined") {
 			sidebar.closeSidebarNode = this.getArrayNodes(
@@ -82,9 +262,9 @@ class ToggleSidebar {
 				"close sidebar node"
 			);
 			if (!(sidebar.closeSidebarNode instanceof Array)) {
-				errorMsg.push(
-					"Especified close sidebar node is not valid or not found"
-				);
+				this.die("Close sidebar node error:", [
+					"Especified close sidebar node is not valid or not found",
+				]);
 			} else {
 				//loop trought all nodes in all node list
 				sidebar.closeSidebarNode.forEach((nodeList) => {
@@ -98,16 +278,18 @@ class ToggleSidebar {
 				});
 			}
 		}
+	}
 
+	addSidebar_setContainerSidebarNode(sidebar, autoClose) {
 		//verifying container nodes
 		sidebar.containerNode = this.getArrayNodes(
 			sidebar.containerNode,
 			"sidebar container node"
 		);
 		if (!(sidebar.containerNode instanceof Array)) {
-			errorMsg.push(
-				"The specified sidebar HTML node container is invalid or not found"
-			);
+			this.die("Container sidebar node error:", [
+				"The specified sidebar HTML node container is invalid or not found",
+			]);
 		} else {
 			//setting the HTML container node data- attributes in function parameter object
 			sidebar.containerNode.forEach((nodeList) => {
@@ -119,35 +301,36 @@ class ToggleSidebar {
 				});
 			});
 		}
+	}
 
+	addSidebar_setOmitCloseSidebarNodes(sidebar) {
 		/* omitClose nodes*/
-		if (typeof sidebar.closeSidebarNode !== "undefined") {
-			// getArrayNodes will search for nodes in current document
-			sidebar.omitCloseNode = this.getArrayNodes(sidebar.omitCloseNode);
-			if (!(sidebar.omitCloseNode instanceof Array)) {
-				errorMsg.push(
-					"'omitCloseNode' attribute can be an array or string but needs to exists in the HTML code"
-				);
-			} else {
-				sidebar.omitCloseNode.forEach((nodeList) => {
-					nodeList.forEach((node) => {
-						let barsArray = [];
-						if (typeof node.dataset.sidebarOmit === "undefined") {
-							barsArray.push(sidebar.name);
-						} else {
-							barsArray.push(node.dataset.sidebarOmit.split(","));
-							barsArray.push(sidebar.name);
-						}
-						node.dataset.sidebarOmit = barsArray;
-						node.dataset.sidebarAction = "omit-close";
-						node.addEventListener("click", function (evt) {
-							evt.preventDefault();
-						});
+		sidebar.omitCloseNode = this.getArrayNodes(sidebar.omitCloseNode);
+		if (!(sidebar.omitCloseNode instanceof Array)) {
+			this.die("Omit Close node(s) error", [
+				"'omitCloseNode' attribute can be an array or string but needs to exists in the HTML code",
+			]);
+		} else {
+			sidebar.omitCloseNode.forEach((nodeList) => {
+				nodeList.forEach((node) => {
+					let barsArray = [];
+					if (typeof node.dataset.sidebarOmit === "undefined") {
+						barsArray.push(sidebar.name);
+					} else {
+						barsArray.push(node.dataset.sidebarOmit.split(","));
+						barsArray.push(sidebar.name);
+					}
+					node.dataset.sidebarOmit = barsArray;
+					node.dataset.sidebarAction = "omit-close";
+					node.addEventListener("click", function (evt) {
+						evt.preventDefault();
 					});
 				});
-			}
+			});
 		}
+	}
 
+	addSidebar_setOpenSidebarNode(sidebar) {
 		//verifying open sidebar nodes exists
 		sidebar.openSidebarNode = this.getArrayNodes(
 			sidebar.openSidebarNode,
@@ -169,14 +352,6 @@ class ToggleSidebar {
 				});
 			});
 		}
-
-		if (errorMsg.length > 0) {
-			//throw error (finalize executuion) if any error was found
-			this.die(errorText, errorMsg);
-		} else {
-			this.addedSidebar = true;
-			this.init();
-		}
 	}
 
 	die(text, msgArray) {
@@ -190,60 +365,8 @@ class ToggleSidebar {
 		throw new Error(text);
 	}
 
-	init() {
-		//Plugin initialization reading sidebar data- attributes
-
-		//Getting HTML body tag
-		this.body = document.querySelector("body");
-		//sidebar containers
-		this.sidebars = document.querySelectorAll("[data-sidebar-container]");
-		//sidebar action buttons (open and close)
-		this.sidebarsElements = document.querySelectorAll(
-			"[data-sidebar-action]"
-		);
-
-		if (this.sidebars.length > 0) {
-			this.addedSidebar = true;
-		}
-		this.sidebarsList = [];
-		//getting and setting sidebars relative data (name, activation class,
-		//autoclose, openStatus) and action nodes
-		this.sidebars.forEach((node) => {
-			let sidebarInfo = {};
-			sidebarInfo.name = node.dataset.sidebar;
-			sidebarInfo.activationClass = node.dataset.sidebarActivateClass;
-			sidebarInfo.containerNode = node;
-			sidebarInfo.openSidebarNode = [];
-			sidebarInfo.closeSidebarNode = [];
-			sidebarInfo.omitClose = [];
-			this.sidebarsElements.forEach((el) => {
-				if (sidebarInfo.name == el.dataset.sidebar) {
-					if (el.dataset.sidebarAction == "open") {
-						sidebarInfo.openSidebarNode.push(el);
-					}
-					if (el.dataset.sidebarAction == "close") {
-						sidebarInfo.closeSidebarNode.push(el);
-					}
-					if (el.dataset.sidebarAction == "omit-close") {
-						sidebarInfo.omitClose.push(el);
-					}
-				}
-			});
-			let autoClose = node.dataset.sidebarAutoClose == "true" || false;
-			if (!sidebarInfo.closeSidebarNode) {
-				autoClose = true;
-			}
-			sidebarInfo.autoClose = autoClose;
-			sidebarInfo.openStatus = false;
-			this.sidebarsList.push(sidebarInfo);
-		});
-		if (this.sidebars.length > 0 && this.addedSidebar) {
-			this.execute();
-			this.initialized = true;
-		}
-	}
-
 	getArrayNodes(data, node) {
+		// getArrayNodes will search for nodes in current document and returns an array of nodeLists
 		let errorText = "";
 		const errorMsg = [];
 		const arrayNodes = [];
@@ -253,7 +376,7 @@ class ToggleSidebar {
 			const firstChar = data.charAt(0);
 			if (firstChar !== "." && firstChar !== "#") {
 				errorMsg.push(
-					"String needs to start with dot (.) or hastag(#) to find the node"
+					"String needs to start with dot (.) for class or hastag(#) for id to find the node"
 				);
 			} else {
 				arrayNodes.push(document.querySelectorAll(data));
@@ -268,7 +391,7 @@ class ToggleSidebar {
 			data.removeAttribute(attName);
 		}
 
-		// verifyiong for node list (instance of NodeList)
+		// verifying for node list (instance of NodeList)
 		if (data instanceof NodeList) {
 			arrayNodes.push(data);
 		}
@@ -344,7 +467,7 @@ class ToggleSidebar {
 		//HTML body tag or sidebars open nodes
 
 		window.removeEventListener("mouseup", this.bodyActionHandler, false);
-		this.sidebarsList.forEach((sidebar) => {
+		this.sidebarList.forEach((sidebar) => {
 			if (typeof sidebar.containerNode.dataset.initialized == "undefined") {
 				sidebar.openSidebarNode.forEach((node) => {
 					node.removeEventListener(
@@ -370,7 +493,7 @@ class ToggleSidebar {
 		if (event.button == 0) {
 			//clicked element
 			const clickedElement = event.target;
-			this.sidebarsList.forEach((sidebar) => {
+			this.sidebarList.forEach((sidebar) => {
 				if (clickedElement.dataset.sidebar == sidebar.name) {
 					//removing open listener to add later a close function to
 					//sidebar open node
@@ -414,7 +537,7 @@ class ToggleSidebar {
 			let sidebar;
 			//searching the first sidebar with openStatus = true.
 			//Any other sidebar was closed in openSidebar function
-			this.sidebarsList.forEach((testbar) => {
+			this.sidebarList.forEach((testbar) => {
 				if (testbar.openStatus) {
 					sidebar = testbar;
 					return;
